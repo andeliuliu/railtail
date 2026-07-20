@@ -1,0 +1,14 @@
+{
+  "name": "railtail",
+  "owner": {
+    "name": "Andrew Liu",
+    "url": "https://github.com/andeliuliu"
+  },
+  "plugins": [
+    {
+      "name": "railtail",
+      "source": "./",
+      "description": "Lazy senior-dev mode for Rails monoliths (a fork of ponytail)."
+    }
+  ]
+}

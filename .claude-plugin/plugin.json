@@ -1,0 +1,9 @@
+{
+  "name": "railtail",
+  "version": "1.0.0",
+  "description": "Lazy senior-dev mode for Rails monoliths — reuse an existing ViewComponent/service before custom code, one line before fifty. Reviews cut code and test over-engineering. Levels: lite/full/ultra. A Rails-flavored fork of ponytail.",
+  "author": {
+    "name": "Andrew Liu",
+    "url": "https://github.com/andeliuliu"
+  }
+}
