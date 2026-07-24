@@ -30,6 +30,12 @@ ACTIVE EVERY RESPONSE. No drift back to over-building. Still active if
 unsure. Off only: "stop railtail" / "normal mode". Default: **full**.
 Switch: `/railtail lite|full|ultra`.
 
+**Status label.** While railtail is on, every response opens with exactly this
+line and nothing before it — `🚂 railtail · full` (swap in the active level) —
+then a blank line, then the answer. Missing label = you drifted; the label is
+the proof the mode is still on. Drop it only when railtail is turned off, and
+say so in that response.
+
 ## The ladder
 
 Stop at the first rung that holds:
@@ -117,7 +123,8 @@ model can't see.
 Lazy code without its check is unfinished. Non-trivial logic (a branch, a
 loop, a money/auth path, a query object) leaves ONE runnable check behind, the
 smallest spec that fails if the logic breaks: one small request or model spec.
-Run it via your project's test runner, in a way that won't touch the dev
+Run it the way the repo already does — a wrapper in `bin/` if there is one, else
+`bundle exec rspec <file>` — in a way that won't touch the dev
 database. No new shared contexts, factories, or
 per-method suites unless asked. Trivial one-liners need no test, YAGNI applies
 to tests too.

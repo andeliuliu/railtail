@@ -18,13 +18,18 @@ outcome is getting shorter.
 
 ## Scope
 
-Default to this branch's diff vs its parent (default `develop`) — not the whole
-repo, not just uncommitted work:
+Default to this branch's diff vs its parent — not the whole repo, not just
+uncommitted work. Resolve the base branch, never assume it:
 
-`git diff develop...HEAD`              # the branch's full diff
-`git diff --name-only develop...HEAD`  # just the files it touched
+`git symbolic-ref --short refs/remotes/origin/HEAD`  # → e.g. origin/main
 
-Swap `develop` for your actual base if you forked elsewhere. If the user points
+If that fails (no remote HEAD set), take the first of `develop`, `main`,
+`master` that `git rev-parse --verify` finds. Then:
+
+`git diff <base>...HEAD`              # the branch's full diff
+`git diff --name-only <base>...HEAD`  # just the files it touched
+
+If the user names a base, use theirs. If the user points
 at specific staged/working changes or a single file, review that instead. Read a
 changed file in full when a finding needs context, but every finding must live
 inside the reviewed diff — don't flag pre-existing code it didn't touch.
@@ -81,7 +86,7 @@ If there is nothing to cut, say `Lean already. Ship.` and stop.
 
 Scope: over-engineering and complexity only. Correctness bugs, security holes,
 and performance are explicitly out of scope. Route them to a normal review
-pass, not this one. A single request/model spec run via `bin/test` is the
-railtail minimum, not bloat, never flag it for deletion. Lists findings, applies
-nothing.
+pass, not this one. A single request/model spec run via the repo's own runner is
+the railtail minimum, not bloat, never flag it for deletion. Lists findings,
+applies nothing.
 "stop railtail-review" or "normal mode": revert to verbose review style.

@@ -41,13 +41,17 @@ Or add to `settings.json`:
 stop railtail        # turn it off
 ```
 
+While it's on, every response opens with `🚂 railtail · full` (or `lite`/`ultra`) —
+no label means it's off.
+
 ## Notes
 
 - **Tuned for Rails 8 monoliths** (ViewComponent, Hotwire, service/query objects,
   RSpec). The examples reference a real app's components/services as illustration —
   swap in your own; the ladder and rules are what matter.
-- **Assumes a `develop` base branch and `bin/test`** for the review skills — adjust
-  to your repo's conventions where noted in each skill.
+- **No setup.** The review skills resolve your base branch from
+  `origin/HEAD` (falling back to `develop`/`main`/`master`) and use whatever test
+  runner your repo already has — nothing to hand-edit after installing.
 
 ## Credits
 

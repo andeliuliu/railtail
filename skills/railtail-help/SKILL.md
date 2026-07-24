@@ -22,7 +22,8 @@ session start — invoke `/railtail` to turn it on.
 | **Full** | `/railtail` | The ladder enforced: YAGNI → existing component → existing service → installed dep → stdlib → one line → minimum. Default once invoked. |
 | **Ultra** | `/railtail ultra` | YAGNI extremist. Deletion before addition. Challenges requirements before building. |
 
-Level sticks until changed or session end.
+Level sticks until changed or session end. While on, every response opens with
+`🚂 railtail · <level>` — no label means it's off.
 
 ## Skills
 

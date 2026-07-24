@@ -19,12 +19,18 @@ sharper specs that still go red when the code is wrong.
 
 ## Scope
 
-Default to this branch's spec changes vs its parent (default `develop`):
+Default to this branch's spec changes vs its parent. Resolve the base branch,
+never assume it:
 
-`git diff develop...HEAD -- spec/`                     # spec changes in this branch
-`git diff --name-only develop...HEAD | grep _spec.rb`  # just the spec files touched
+`git symbolic-ref --short refs/remotes/origin/HEAD`  # → e.g. origin/main
 
-Swap `develop` for your base if you forked elsewhere. If the user points at a
+If that fails (no remote HEAD set), take the first of `develop`, `main`,
+`master` that `git rev-parse --verify` finds. Then:
+
+`git diff <base>...HEAD -- spec/`                     # spec changes in this branch
+`git diff --name-only <base>...HEAD | grep _spec.rb`  # just the spec files touched
+
+If the user names a base, use theirs. If the user points at a
 spec file (or the specs covering a file they just changed), review those instead.
 
 ## Tags (what to cut, and why it earns nothing)
