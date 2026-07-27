@@ -52,6 +52,9 @@ no label means it's off.
 - **No setup.** The review skills resolve your base branch from
   `origin/HEAD` (falling back to `develop`/`main`/`master`) and use whatever test
   runner your repo already has — nothing to hand-edit after installing.
+- **Parallel when it earns its keep.** Tasks or reviews spanning 12 or more
+  separable files may use up to three subagents. One coordinator keeps shared
+  context, removes duplicate work/findings, and verifies the final result.
 
 ## Credits
 

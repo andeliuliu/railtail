@@ -34,6 +34,13 @@ Level sticks until changed or session end. While on, every response opens with
 | **railtail-specs** | `/railtail-specs` | Over-testing review — which specs to cut: redundant, framework-trivial, tautological-mock, dead, or "it no longer does X". |
 | **railtail-help** | `/railtail-help` | This card. |
 
+## Parallel work
+
+For 12 or more files that form independent areas, `railtail`,
+`railtail-review`, and `railtail-specs` may use up to three subagents while one
+coordinator owns shared context, deduplication, and final verification. Tightly
+coupled or smaller work stays with one agent. This help card never delegates.
+
 ## The ladder (full mode)
 
 1. Does this need to exist at all? (YAGNI)

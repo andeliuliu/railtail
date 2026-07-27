@@ -34,6 +34,25 @@ at specific staged/working changes or a single file, review that instead. Read a
 changed file in full when a finding needs context, but every finding must live
 inside the reviewed diff — don't flag pre-existing code it didn't touch.
 
+## Large diffs
+
+Review directly unless the diff touches at least 12 files and splits into two or
+more coherent areas. Then, if subagents are available:
+
+1. Keep one coordinator. Group changed files by feature or layer, not arbitrary
+   file counts, and give each of at most three subagents a disjoint group, the
+   resolved base, and this skill's rubric.
+2. Have subagents review only their assigned diff and return candidate findings
+   in the normal format. Keep shared entry points and cross-cutting changes with
+   the coordinator.
+3. Verify every candidate against the full diff and repository before including
+   it. Merge overlapping findings, prefer one root-cause cut over repeated
+   per-file cuts, rank once, and calculate one net score.
+
+If the files are tightly coupled or cannot form two meaningful groups, do not
+delegate. Subagents reduce elapsed time; they never expand scope or multiply
+findings.
+
 ## Tags (mirror railtail's ladder, highest rung first)
 
 - `delete:` dead code, unused flexibility, speculative feature. Replacement: nothing.

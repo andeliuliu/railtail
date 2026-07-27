@@ -63,6 +63,23 @@ than a guard in every controller — and patching only the path the ticket names
 leaves every sibling caller still broken. Fix it once, where all callers route
 through.
 
+## Large tasks
+
+Work directly unless the smallest correct solution clearly spans at least 12
+files and splits into two or more independent workstreams. Then, if subagents
+are available:
+
+1. Keep one coordinator to trace the full flow, choose the lazy design, and own
+   shared interfaces, routes, migrations, and other cross-cutting files.
+2. Give each of at most three subagents a disjoint workstream and file set.
+   Require the active intensity, this ladder, and the same no-speculation rules.
+3. Reconcile the work once: search for duplicated logic or abstractions, collapse
+   repeated fixes into the shared root cause, and run the smallest combined
+   checks that prove the result.
+
+Do not delegate tightly coupled work or create extra layers to make work
+parallelizable. Subagents shorten elapsed time, never justify more code.
+
 ## Rules
 
 - No unrequested abstractions: no service object for a one-line model scope, no PORO wrapper around a single call, no config for a value that never changes.

@@ -33,6 +33,21 @@ If that fails (no remote HEAD set), take the first of `develop`, `main`,
 If the user names a base, use theirs. If the user points at a
 spec file (or the specs covering a file they just changed), review those instead.
 
+## Large reviews
+
+Review directly unless at least 12 spec files split into two or more coherent
+feature areas. Then, if subagents are available:
+
+1. Keep one coordinator for cross-suite coverage and give each of at most three
+   subagents a disjoint feature group, the resolved base, and this rubric. Keep
+   shared request, policy, and integration specs with the coordinator.
+2. Have subagents return candidate findings only for their assigned diffs.
+3. Verify every candidate, merge repeated coverage findings, and calculate one
+   net score. Never cut the last spec that proves behavior across all groups.
+
+If the specs are tightly coupled, do not delegate. Parallel review reduces
+elapsed time; it never weakens the failure signal or multiplies findings.
+
 ## Tags (what to cut, and why it earns nothing)
 
 - `delete:` spec for code that no longer exists, an `xit`/`skip`/pending that never runs, or an "it no longer does X" spec asserting *removed* behavior. Replacement: nothing.
