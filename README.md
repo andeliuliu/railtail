@@ -14,6 +14,7 @@ railtail is **opt-in** — it does not auto-activate. Invoke `/railtail` to turn
 |---------|--------------|
 | `/railtail [lite\|full\|ultra]` | Lazy mode itself — the ladder: YAGNI → existing component → existing service → installed dep → stdlib → one line → minimum. Default level: `full`. |
 | `/railtail-review` | Over-engineering review of a diff — a ranked list of what to delete / reuse / shrink. |
+| `/railtail-pr-commenter [PR] [--top-k K]` | Discover once, verify candidates, then post up to K suggestions (default 10) in one PR comment. |
 | `/railtail-specs` | The test counterpart — which specs to cut (redundant, framework-trivial, tautological mocks, "it no longer does X"). |
 | `/railtail-help` | Quick-reference card. |
 
@@ -37,12 +38,27 @@ Or add to `settings.json`:
 /railtail            # turn on lazy mode (full)
 /railtail ultra      # YAGNI extremist: deletion before addition
 /railtail-review     # review this branch's diff for over-engineering
+/railtail-pr-commenter               # verify this branch's PR suggestions; comment top 10
+/railtail-pr-commenter 123 --top-k 5  # comment at most 5 suggestions on PR #123
+/railtail-pr-commenter --dry-run     # preview the final comment without posting
 /railtail-specs      # review this branch's specs for over-testing
 stop railtail        # turn it off
 ```
 
 While it's on, every response opens with `🚂 railtail · full` (or `lite`/`ultra`) —
 no label means it's off.
+
+`railtail-review` and `railtail-specs` use one discovery pass followed by targeted
+verification that tries to disprove each proposed cut. They report only verified
+suggestions, checking actual callers/replacements for code and preserved failure
+signals for specs. They do not repeat full reviews until the list stabilizes.
+
+`railtail-pr-commenter` (also referred to as `railtail-PR-commenter`) uses the same
+workflow on a PR. It works down the ranked candidates until K suggestions are
+verified or candidates run out, then posts one comment. K defaults to 10; rejected
+candidates do not consume slots. It posts nothing when no suggestions survive.
+GitHub access via a connector or authenticated `gh` is required; invoking the
+commenter authorizes its final comment unless `--dry-run` is supplied.
 
 ## Notes
 

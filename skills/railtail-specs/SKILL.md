@@ -33,6 +33,42 @@ If that fails (no remote HEAD set), take the first of `develop`, `main`,
 If the user names a base, use theirs. If the user points at a
 spec file (or the specs covering a file they just changed), review those instead.
 
+## Discover once, then verify
+
+Scan the scoped spec changes once, collect candidates, merge overlapping cuts,
+and rank biggest worthwhile cut first. Treat tags and examples below as leads,
+not sufficient evidence to delete a spec.
+
+Work down the candidate list and try to **disprove each proposed cut** using
+targeted reads of the spec, its setup/shared examples, the implementation, and
+any claimed surviving coverage:
+
+- What concrete regression could this spec catch that the survivor would miss?
+  Compare assertions, inputs, edge cases, and exercised code paths. Name the
+  exact surviving example when claiming duplicate coverage.
+- Does a lower-layer spec actually prove the integration behavior? A policy
+  spec proving a denial does not prove that a request enforces that policy.
+- Does a framework-looking assertion protect application configuration, or a
+  negative assertion prevent a real regression? Does a mock check a required
+  interaction? Labels alone do not justify cutting these specs.
+- Would cheaper setup still exercise the behavior, including persistence,
+  queries, callbacks, and constraints? Do not suggest `build_stubbed` for a
+  behavior that requires the database.
+
+Reject cuts that lose a distinct failure signal or whose safety is uncertain.
+For accepted cuts, record why the failure signal survives and where. Run the
+relevant surviving specs with the repository's runner when available; a green
+run alone does not prove redundancy. If execution is unavailable, disclose that
+and rely only on evidence actually inspected. Do not modify specs during review.
+
+By default, verify every discovered candidate and report only survivors. If the
+user supplies a limit K, stop after K distinct suggestions survive or the list
+is exhausted, moving past rejected candidates without padding. Before reporting,
+check the retained cuts together: they must not remove each other's surviving
+coverage. Drop conflicting cuts and backfill from remaining candidates if needed.
+Score only reported, verified cuts. Do not rescan the suite or loop for agreement;
+state missing evidence rather than treating an incomplete review as clean.
+
 ## Large reviews
 
 Review directly unless at least 12 spec files split into two or more coherent
@@ -42,8 +78,8 @@ feature areas. Then, if subagents are available:
    subagents a disjoint feature group, the resolved base, and this rubric. Keep
    shared request, policy, and integration specs with the coordinator.
 2. Have subagents return candidate findings only for their assigned diffs.
-3. Verify every candidate, merge repeated coverage findings, and calculate one
-   net score. Never cut the last spec that proves behavior across all groups.
+3. Apply the targeted verification workflow, merge repeated coverage findings,
+   and calculate one net score for reported cuts. Never cut the last spec that proves behavior across all groups.
 
 If the specs are tightly coupled, do not delegate. Parallel review reduces
 elapsed time; it never weakens the failure signal or multiplies findings.
@@ -87,6 +123,5 @@ Cut over-testing ONLY. NEVER cut the coverage of real behavior, an edge case, a
 money/auth path, or a regression tied to a ticket — and never delete the LAST
 spec that would fail if the logic breaks (the railtail minimum is sacred, not
 bloat). When unsure whether a spec catches a real failure, KEEP it and say so —
-a wrongly-deleted spec is a silent regression waiting to happen. Run survivors
-via your project's test runner. Lists findings, applies nothing.
+a wrongly-deleted spec is a silent regression waiting to happen. Verify survivors as described above. Lists findings, applies nothing.
 "stop railtail-specs" or "normal mode" to revert.

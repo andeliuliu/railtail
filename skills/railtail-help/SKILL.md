@@ -31,8 +31,13 @@ Level sticks until changed or session end. While on, every response opens with
 |-------|---------|--------------|
 | **railtail** | `/railtail` | Lazy mode itself. Simplest solution that works, tuned to a Rails monolith's ladder. |
 | **railtail-review** | `/railtail-review` | Over-engineering review of this branch's diff vs parent (or a file/staged changes you point at): ranked list of what to delete/reuse/shrink. `L42: component: raw markup. render CardComponent.` |
+| **railtail-pr-commenter** | `/railtail-pr-commenter [PR] [--top-k K]` | Discover once, verify ranked candidates until K survive (default 10) or candidates run out, then post one comment. `--dry-run` previews. |
 | **railtail-specs** | `/railtail-specs` | Over-testing review — which specs to cut: redundant, framework-trivial, tautological-mock, dead, or "it no longer does X". |
 | **railtail-help** | `/railtail-help` | This card. |
+
+Code and spec reviews discover candidates once, then try to disprove each cut
+with targeted checks. Only verified suggestions are reported; spec cuts must
+preserve the failure signal. There is no convergence loop.
 
 ## Parallel work
 

@@ -34,6 +34,40 @@ at specific staged/working changes or a single file, review that instead. Read a
 changed file in full when a finding needs context, but every finding must live
 inside the reviewed diff — don't flag pre-existing code it didn't touch.
 
+## Discover once, then verify
+
+Scan the scoped diff once to collect candidates. Deduplicate by root cause and
+rank biggest worthwhile cut first; prefer better-supported, lower-risk cuts for
+ties. Keep the location, proposed replacement, and expected benefit with each
+candidate. This list is provisional, not the final findings.
+
+Then work down that list, trying to **disprove each suggestion** with targeted
+reads of the relevant code, callers, and tests:
+
+- What behavior would break or disappear if this were removed or shortened?
+  Check actual usage, contracts, edge cases, and framework/dynamic entry points;
+  a missing text match alone does not prove code is dead.
+- Does the named replacement exist in this repository or installed version,
+  and does it support this use case, including inputs, outputs, and side effects?
+- Does the change actually reduce complexity without moving it elsewhere or
+  overlapping another suggestion? Keep one actionable cut per root cause.
+
+Reject unsupported or behavior-changing cuts. If a candidate needs correction,
+check the corrected proposal against the same evidence before retaining it.
+Use a focused existing test only when it can resolve a concrete uncertainty;
+do not edit code to prove a review suggestion. Reuse evidence already read.
+
+By default, verify all discovered candidates and report only survivors. If the
+user or calling skill supplies an output limit K, verify in rank order until K
+suggestions survive or candidates run out; rejected candidates do not consume
+slots. Do not pad the result or verify the remainder just to count it. Review
+retained suggestions together for conflicting cuts before finalizing; backfill
+from remaining candidates if needed.
+
+Do not repeat full-diff discovery or loop until the list stabilizes. Score only
+reported, verified suggestions. If missing context prevents verification, state
+that limitation instead of presenting an unverified candidate or a clean bill.
+
 ## Large diffs
 
 Review directly unless the diff touches at least 12 files and splits into two or
@@ -45,8 +79,7 @@ more coherent areas. Then, if subagents are available:
 2. Have subagents review only their assigned diff and return candidate findings
    in the normal format. Keep shared entry points and cross-cutting changes with
    the coordinator.
-3. Verify every candidate against the full diff and repository before including
-   it. Merge overlapping findings, prefer one root-cause cut over repeated
+3. Apply the targeted verification workflow before including any candidate. Merge overlapping findings, prefer one root-cause cut over repeated
    per-file cuts, rank once, and calculate one net score.
 
 If the files are tightly coupled or cannot form two meaningful groups, do not
